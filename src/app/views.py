@@ -6,7 +6,9 @@ import json
 import gs
 import thinker2
 import copy
+import time
 thinker = thinker2.thinker()
+currentArr=json.load(open('data/openings.json'))['games']
 board = [[5,3,4,1000,9,4,3,5],
 [1,1,1,1,1,1,1,1],
 [0,0,0,0,0,0,0,0],
@@ -46,9 +48,11 @@ def index():
 
 @app.route('/move')
 def move():
+
     global gamestate
     global moveNum
-
+    global currentArr
+    print(len(currentArr))
 
     FENstring = request.args.get('FEN')
     response = FENtoGS(FENstring, gamestate.board, 1, gamestate.hasCastled, gamestate.canCastle)
@@ -57,18 +61,57 @@ def move():
     else:
         gamestate=response
     moveNum+=1
-    new_move = thinker.rootthink(gamestate, -1, moveNum )
-    print(new_move)
-    if new_move==[]:
-        print('check mate')
-        return None
-    elif new_move['type']=='castle':
-        board=gamestate.castle(-1, abs(new_move['number']))
-        gamestate=gamestate.returnNewGameState(board)
+    new_board=None
+    if len(currentArr)>0:
+        found=False
 
+        for index, b in enumerate(currentArr):
+
+            if found==False:
+                if b[0]==gamestate.board:
+
+                    currentArr = currentArr[index][1]
+                    best_score=-1
+                    best_board=[]
+                    best_index=0
+                    if len(currentArr)>0:
+
+                        for index2, b2 in enumerate(currentArr):
+
+                            if b2[3]>best_score:
+                                best_board =b2[0]
+                                best_index = index2
+                                best_score=b2[3]
+                        print('newboad going out')
+                        found=True
+                        new_board = best_board
+                        currentArr = currentArr[best_index][1]
+                        time.sleep(0.5)
+
+
+                    else:
+                        new_board = None
+                        break
+            else:
+                break
+
+    if new_board == None:
+
+        new_move = thinker.rootthink(gamestate, -1, moveNum )
+
+        if new_move==[]:
+            print('check mate')
+            return None
+        elif new_move['type']=='castle':
+            board=gamestate.castle(-1, abs(new_move['number']))
+            gamestate=gamestate.returnNewGameState(board)
+
+        else:
+            board=gamestate.simpleMove(1,gamestate.board[new_move['origin'][0]][new_move['origin'][1]], new_move['origin'], new_move['destination'])
+            gamestate=gamestate.returnNewGameState(board)
     else:
-        board=gamestate.simpleMove(1,gamestate.board[new_move['origin'][0]][new_move['origin'][1]], new_move['origin'], new_move['destination'])
-        gamestate=gamestate.returnNewGameState(board)
+        gamestate=gamestate.returnNewGameState(new_board)
+
     moveNum+=1
     return json.dumps({'fen':gsToFen(gamestate)})
 
@@ -108,10 +151,10 @@ def FENtoGS(FENstring,board, color, hasCastled, canCastle):
 
 
     new_board = [[0 for x in range(8)] for y in range(8)]
-    print(new_board)
+
     keys={'r':-5, 'R':5, 'k':-1000, 'K':1000, 'q':-9, 'Q':9, 'p':-1, 'P':1, 'b':-4, 'B':4, 'n':-3, 'N':3}
     arr = FENstring.split('/')
-    print(arr)
+
     ep={-1:[], 1:[]}
     for x in range(7, -1, -1):
 
@@ -134,7 +177,7 @@ def FENtoGS(FENstring,board, color, hasCastled, canCastle):
             if board[x][y]!=new_board[x][y]:
 
                 differences.append({'pos':[x,y], 'newValue':new_board[x][y], 'oldValue':board[x][y]})
-    print(differences)
+
     if len(differences) == 2:
 
         for difference in differences:
@@ -186,7 +229,7 @@ def FENtoGS(FENstring,board, color, hasCastled, canCastle):
             elif difference['pos']==[7,4]:
                 hasCastled[-1]=True
 
-    print(new_board)
+
     return gs.gamestate(new_board, ep, canCastle, hasCastled)
 
         #check for castles

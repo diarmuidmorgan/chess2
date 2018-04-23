@@ -37,6 +37,7 @@ class analyze():
         self.collection = state.collection
         self.board = state.board
         self.checked = state.checked
+        self.protectingPieces=0
         #will do these another night
         self.hasCastled = state.hasCastled[1000]-state.hasCastled[-1000]
         self.canCastle = int(state.canCastle[1000]['king'])+int(state.canCastle[1000]['queen'])-int(state.canCastle[-1000]['king'])-int(state.canCastle[-1000]['queen'])
@@ -67,10 +68,11 @@ class analyze():
 
                         self.forks+=self.board[x][y]
 
-                #for pos in piece['protects']:
+                for pos in piece['protects']:
 
-                #    x=pos[0];y=pos[1]
-                #    self.protects += self.board[x][y]
+                    x=pos[0];y=pos[1]
+                    self.protected += self.board[x][y]
+                    self.protectingPices += pieceType
 
                 if piece['pin']!=None:
 
@@ -161,18 +163,26 @@ class analyze():
     def sumCentrePawns(self):
         #return a sum of the pawns in the four centre squares
         board=self.board
-        for coords in [[4,4],[4,5],[5,5], [5,4]]:
+        for coords in [[3,4],[3,3],[4,4], [4,3]]:
 
             if abs(board[coords[0]][coords[1]])==1:
 
                 self.centrePawns += board[coords[0]][coords[1]]
+    def sumBackRanks(self):
+
+        self.backRanks = sum(self.board[0])+sum(self.board[7])
+
+        return sum
 
     def analyze(self, move, gs, RETURN):
+
         if gs != False:
             self.loadState(gs, move)
+
         self.sumCentrePawns()
         self.findFianchetto()
         self.scoreBoard()
+        self.sumBackRanks()
         self.readCollection()
         if RETURN:
             return self.produceX()
@@ -204,7 +214,7 @@ class analyze():
                 d[str(x)+str(y)]=self.board[x][y]
 
         d['move']=self.move
-        
+
         row=pd.DataFrame([d], columns=d.keys())
         return row
 

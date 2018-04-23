@@ -46,14 +46,11 @@ class forest():
 
         X=self.an.analyze(moveNum, gstate, True)
         #see if this is the fucking issue!
-        X['pawnRanks']=0
+
 
         bscore = self.model.predict_proba(X[self.features])
-
-        if color == 1:
-            return bscore[0][1]
-        else:
-            return 1-bscore[0][1]
+        
+        return bscore[0][1]
 
 
 

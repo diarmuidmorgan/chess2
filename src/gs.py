@@ -45,7 +45,7 @@ class gamestate():
             for y, piece in enumerate(row):
                 if piece!=0:
 
-                    collection[piece].append({'pos':[x,y], 'moves':[], 'captures':[], 'pin':None})
+                    collection[piece].append({'pos':[x,y], 'moves':[], 'captures':[], 'protects':[], 'pin':None})
 
         if board[0][0] != 5:
             self.canCastle[1000]['king']=False
@@ -212,6 +212,7 @@ class gamestate():
                     self.protects[color] += moves['protects']
                     self.collection[pieceType][i]['moves']=moves['moves']
                     self.collection[pieceType][i]['captures']=moves['captures']
+                    self.collection[pieceType][i]['protects']=moves['protects']
 
 
         #now do the kings. We know what squares have been checked and made invalid
@@ -398,8 +399,15 @@ class gamestate():
         y1 = origin[1]
         x2 = destination[0]
         y2 = destination[1]
+        #handle promotions automatically. Only promote to queens!
+        if (abs(piece) ==1 and color==1 and x2==7) or (abs(piece)==1 and color==-1 and x2==0):
+
+            board[x2][y2]=9*color
+        else:
+            board[x2][y2]=piece*color
+
         board[x1][y1]=0
-        board[x2][y2]=piece*color
+
 
         if abs(piece) in [1000,-1000]:
 

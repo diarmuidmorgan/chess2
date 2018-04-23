@@ -22,7 +22,7 @@ class thinker():
         gs.getAllMoves()
 
 
-        best_score = 0.001
+        best_score = 1
         best_move = []
         best_gs=copy.deepcopy(gs)
 
@@ -39,7 +39,7 @@ class thinker():
 
                 new_board = gs.castle(color, number)
                 score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
-                if score > best_score:
+                if score < best_score:
                     best_score = score
                     best_move ={'type':'castle', 'number':number}
                     best_gs = copy.deepcopy(new_gs)
@@ -51,7 +51,7 @@ class thinker():
             piece = abs(gs.board[origin[0]][origin[1]])
             new_board = new_gs.simpleMove(color, piece, origin, destination)
             score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
-            if score > best_score:
+            if score < best_score:
                 best_score = score
                 best_move = {'type':'simple', 'origin':origin, 'destination':destination}
                 best_gs=copy.deepcopy(new_gs)
@@ -67,7 +67,7 @@ class thinker():
             new_board = new_gs.simpleMove(color, piece, origin, destination)
 
             score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
-            if score > best_score:
+            if score < best_score:
                 best_score = score
                 best_move = {'type':'simple', 'origin':origin, 'destination':destination}
                 best_gs = copy.deepcopy(new_gs)
@@ -87,9 +87,9 @@ class thinker():
 
         if gs.checked == color:
             print('checked')
-            return 0
+            return -1*color
 
-        if base_score < 0.5:
+        if (color == 1 and base_score < 0.3) or (color == -1 and base_score > 0.7):
             return base_score
 
         best_score=0.5
@@ -143,17 +143,38 @@ class thinker():
             g=new_gs.returnNewGameState(new_board)
             results.append(self.quickScore(g, moveNum, color, m))
 
+
+
+
         results = sorted(results, key=itemgetter('score'))
-        for i in range(len(results)-1, len(results)-4, -1):
+        color = color*-1
+        if color == -1:
+            begin = 0
+            end = min(5, len(results))
+            increment = 1
+            best_score=1
+            for i in range(begin, end, increment):
 
-            result=results[i]
-            new_score = self.node_search(result['gs'], moveNum, color, depth=d, base_score=result['score'])
-            if new_score > best_score:
-                best_score = new_score
+                result=results[i]
+                new_score = self.node_search(result['gs'], moveNum, color, depth=d, base_score=result['score'])
+                if new_score < best_score:
+                    best_score = new_score
+
+        else:
+            begin = len(results)-1
+            end = len(results)-6
+            increment = -1
+            best_score=-1
+
+            for i in range(begin, end, increment):
+
+                result=results[i]
+                new_score = self.node_search(result['gs'], moveNum, color, depth=d, base_score=result['score'])
+                if new_score > best_score:
+                    best_score = new_score
 
 
-        return max(base_score - best_score,0)
-
+        return best_score
 
 
 
@@ -164,7 +185,7 @@ class thinker():
         gs.pinPieces()
         gs.getAllMoves()
         if gs.checked == color:
-            base_score=0
+            base_score=-1*color
 
         else:
             base_score = self.forest.score(gs, moveNum, color)
@@ -175,7 +196,7 @@ class thinker():
 
 
 
-        return best_gamestate
+
 
 if __name__=='__main__':
     think = thinker()
