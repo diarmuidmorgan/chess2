@@ -147,7 +147,7 @@ class thinker():
 
 
         results = sorted(results, key=itemgetter('score'))
-        color = color*-1
+
         if color == -1:
             begin = 0
             end = min(5, len(results))

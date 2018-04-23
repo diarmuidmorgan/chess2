@@ -14,13 +14,18 @@ class analyze():
 
     def __init__(self, state=None):
 
+        if state != None:
+
+            self.loadState(state)
+
 
         pass
 
 
 
-    def loadState(self,state,move):
-        self.move = move
+    def loadState(self,state,move=None):
+        if move!=None:
+            self.move = move
         self.moves=0
         self.captures=0
         self.protected=0
@@ -72,7 +77,7 @@ class analyze():
 
                     x=pos[0];y=pos[1]
                     self.protected += self.board[x][y]
-                    self.protectingPices += pieceType
+                    self.protectingPieces += pieceType
 
                 if piece['pin']!=None:
 
@@ -174,9 +179,9 @@ class analyze():
 
         return sum
 
-    def analyze(self, move, gs, RETURN):
+    def analyze(self, move=None, gs=None, RETURN=False):
 
-        if gs != False:
+        if gs != None and move!=None:
             self.loadState(gs, move)
 
         self.sumCentrePawns()
@@ -184,8 +189,10 @@ class analyze():
         self.scoreBoard()
         self.sumBackRanks()
         self.readCollection()
+        self.sumBackRanks()
         if RETURN:
             return self.produceX()
+
 
     def produceX(self):
         d={}
@@ -221,7 +228,7 @@ class analyze():
 
     def produceStateArray(self):
 
-        self.arr =np.zeros(81, dtype=np.int)
+        self.arr =np.zeros(83, dtype=np.int)
         count=0
         for x in range(0, len(self.board)):
 
@@ -235,7 +242,7 @@ class analyze():
 
         self.arr[64]=self.moves
         self.arr[65]=self.captures
-        self.arr[66]=len(self.state.protects[1])-len(self.state.protects[-1]) #should be protects
+        self.arr[66]=self.protected
         self.arr[67]=self.forks
         self.arr[68]=self.basicScore
         self.arr[69]=self.pins
@@ -250,6 +257,8 @@ class analyze():
         self.arr[78]=self.enpassants
         self.arr[79]=self.canCastle
         self.arr[80]=self.hasCastled
+        self.arr[81]=self.protectingPieces
+        self.arr[82]=self.backRanks
 
 
         return self.arr
