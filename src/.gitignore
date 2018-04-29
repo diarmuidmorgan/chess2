@@ -16,6 +16,7 @@ data/finalExplodedChess.csv
 data/forest.pikl
 data/games.csv
 data/exploded.csv
+data/explodedNoOpenings.csv
 
 # Project files
 .ropeproject

@@ -61,7 +61,7 @@ class gamestate():
 
 
 
-
+        
         return collection
 
     def scoreMaterial(self):

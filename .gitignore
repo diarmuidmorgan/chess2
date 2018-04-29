@@ -11,11 +11,12 @@ __pycache__/*
 .cache/*
 .*.swp
 */.ipynb_checkpoints/*
-
-data/finalExplodedChess.csv
-data/forest.pikl
-data/games.csv
-data/exploded.csv
+src/data
+src/data/finalExplodedChess.csv
+src/data/forest.pikl
+src/data/games.csv
+src/data/exploded.csv
+src/data/explodedNoOpenings.csv
 
 # Project files
 .ropeproject

@@ -5,6 +5,7 @@ import models
 import forest
 import copy
 from operator import itemgetter
+import random
 class thinker():
 
 
@@ -13,8 +14,8 @@ class thinker():
         pass
 
 
-    def rootthink(self,gs, color, moveNum):
-        searchdepth=1
+    def rootthink(self,gs, color, moveNum, searchdepth=1):
+
         gs = copy.deepcopy(gs)
 
         gs.getPinnedSquares()
@@ -30,7 +31,7 @@ class thinker():
             new_gs = copy.deepcopy(gs)
 
 
-            if gs.castles[color*1000][castle] == True:
+            if gs.castles[color*1000][castle] == True and random.random()>0.3:
 
                 if castle=='king':
                     number=2
@@ -39,39 +40,44 @@ class thinker():
 
                 new_board = gs.castle(color, number)
                 score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
+                print('win prob:', 1-score)
                 if score < best_score:
                     best_score = score
                     best_move ={'type':'castle', 'number':number}
                     best_gs = copy.deepcopy(new_gs)
 
         for capture in gs.captures[color]:
-            new_gs = copy.deepcopy(new_gs)
-            origin = capture['origin']
-            destination = capture['destination']
-            piece = abs(gs.board[origin[0]][origin[1]])
-            new_board = new_gs.simpleMove(color, piece, origin, destination)
-            score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
-            if score < best_score:
-                best_score = score
-                best_move = {'type':'simple', 'origin':origin, 'destination':destination}
-                best_gs=copy.deepcopy(new_gs)
+            if random.random()>0.01:
+                new_gs = copy.deepcopy(new_gs)
+                origin = capture['origin']
+                destination = capture['destination']
+                piece = abs(gs.board[origin[0]][origin[1]])
+                new_board = new_gs.simpleMove(color, piece, origin, destination)
+                score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
+                print('win prob:', 1-score)
+                if score < best_score:
+                    best_score = score
+                    best_move = {'type':'simple', 'origin':origin, 'destination':destination}
+                    best_gs=copy.deepcopy(new_gs)
 
 
 
         for move in gs.moves[color]:
-            new_gs = copy.deepcopy(gs)
-            origin = move['origin']
-            destination = move['destination']
+            if random.random()>0.1:
+                new_gs = copy.deepcopy(gs)
+                origin = move['origin']
+                destination = move['destination']
 
-            piece = abs(new_gs.board[origin[0]][origin[1]])
-            new_board = new_gs.simpleMove(color, piece, origin, destination)
+                piece = abs(new_gs.board[origin[0]][origin[1]])
+                new_board = new_gs.simpleMove(color, piece, origin, destination)
 
-            score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
-            if score < best_score:
-                best_score = score
-                best_move = {'type':'simple', 'origin':origin, 'destination':destination}
-                best_gs = copy.deepcopy(new_gs)
-        print(best_score)
+                score = self.node_search(new_gs.returnNewGameState(new_board), moveNum, color,depth=searchdepth)
+                print('win prob:', 1-score)
+                if score < best_score:
+                    best_score = score
+                    best_move = {'type':'simple', 'origin':origin, 'destination':destination}
+                    best_gs = copy.deepcopy(new_gs)
+        print('Best move:', best_move, 'win prob:', 1-best_score)
         return best_move
 
 
@@ -87,7 +93,10 @@ class thinker():
 
         if gs.checked == color:
             print('checked')
-            return -1*color
+            if color == -1:
+                return 1
+            else:
+                return 0
 
         if (color == 1 and base_score < 0.3) or (color == -1 and base_score > 0.7):
             return base_score
@@ -103,7 +112,7 @@ class thinker():
             new_gs = copy.deepcopy(gs)
 
 
-            if new_gs.castles[color*1000][castle] == True:
+            if new_gs.castles[color*1000][castle] == True and random.random()>0.2:
 
                 if castle=='king':
                     number=2
@@ -116,37 +125,38 @@ class thinker():
 
 
         for capture in gs.captures[color]:
-
-            new_gs = copy.deepcopy(new_gs)
-            origin = capture['origin']
-            destination = capture['destination']
-            m = {'type':'simple', 'origin':origin, 'destination':destination}
-            piece = abs(new_gs.board[origin[0]][origin[1]])
-            new_board = new_gs.simpleMove(color, piece, origin, destination)
-            g=new_gs.returnNewGameState(new_board)
-            results.append(self.quickScore(g, moveNum, color, m))
+            if random.random()>0.2:
+                new_gs = copy.deepcopy(new_gs)
+                origin = capture['origin']
+                destination = capture['destination']
+                m = {'type':'simple', 'origin':origin, 'destination':destination}
+                piece = abs(new_gs.board[origin[0]][origin[1]])
+                new_board = new_gs.simpleMove(color, piece, origin, destination)
+                g=new_gs.returnNewGameState(new_board)
+                results.append(self.quickScore(g, moveNum, color, m))
 
 
 
 
 
         for move in gs.moves[color]:
+            if random.random()>0.7:
+                new_gs = copy.deepcopy(gs)
+                origin = move['origin']
+                destination = move['destination']
+                m = {'type':'simple', 'origin':origin, 'destination':destination}
 
-            new_gs = copy.deepcopy(gs)
-            origin = move['origin']
-            destination = move['destination']
-            m = {'type':'simple', 'origin':origin, 'destination':destination}
+                piece = abs(new_gs.board[origin[0]][origin[1]])
+                new_board = new_gs.simpleMove(color, piece, origin, destination)
 
-            piece = abs(new_gs.board[origin[0]][origin[1]])
-            new_board = new_gs.simpleMove(color, piece, origin, destination)
-
-            g=new_gs.returnNewGameState(new_board)
-            results.append(self.quickScore(g, moveNum, color, m))
+                g=new_gs.returnNewGameState(new_board)
+                results.append(self.quickScore(g, moveNum, color, m))
 
 
 
 
         results = sorted(results, key=itemgetter('score'))
+
 
         if color == -1:
             begin = 0
@@ -162,9 +172,9 @@ class thinker():
 
         else:
             begin = len(results)-1
-            end = len(results)-6
+            end = max(len(results)-6,0)
             increment = -1
-            best_score=-1
+            best_score=0
 
             for i in range(begin, end, increment):
 
@@ -185,7 +195,11 @@ class thinker():
         gs.pinPieces()
         gs.getAllMoves()
         if gs.checked == color:
-            base_score=-1*color
+            if color == -1:
+                base_score= 10
+            else:
+                base_score = -10
+
 
         else:
             base_score = self.forest.score(gs, moveNum, color)

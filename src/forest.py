@@ -3,6 +3,7 @@ from sklearn.externals import joblib
 import pandas as pd
 import stats
 import json
+from sklearn.linear_model import LogisticRegression
 
 class forest():
 
@@ -16,15 +17,15 @@ class forest():
 
         else:
 
-            self.model=joblib.load('data/forest.pikl')
-            self.features = json.load(open('data/features'))['features']
+            self.model=joblib.load('data/logReg.pikl')
+            self.features = json.load(open('data/logRegfeatures'))['features']
 
     def buildModel(self):
-
+        from sklearn.linear_model import LogisticRegression
         nums=[str(i) for i in range (8)]
-        df = pd.read_csv('data/finalExplodedChess.csv')
+        df = pd.read_csv('data/explodedNoOpenings.csv')
         numbers = [str(i) for i in range(8)]
-        cols = [col for col in df.columns if col not in ['white_rating', 'opening', 'black_rating', 'id', 'victory_type']]
+        cols = [col for col in df.columns if col not in ['white_rating', 'opening', 'black_rating', 'id', 'victory_type', "Unnamed: 0"]]
         print(cols)
         cols = [col for col in cols if col[0] not in numbers]
 
@@ -34,10 +35,10 @@ class forest():
         cols = [col for col in cols if col not in ['winner',  'target', 'winner_white', 'winner_black']]
         df = pd.concat(features_to_concat, axis=1)
         print(df[cols].shape)
-        clf = rf(max_depth=100).fit(df[cols], df['winner_white'])
-        joblib.dump(clf, 'data/forest.pikl')
+        clf = rf().fit(df[cols], df['winner_white'])
+        joblib.dump(clf, 'data/logReg.pikl')
         import json
-        f=open('data/features','w')
+        f=open('data/RFfeatures','w')
         f.write(json.dumps({'features':cols}))
         f.close()
         print(cols)
@@ -49,7 +50,7 @@ class forest():
 
 
         bscore = self.model.predict_proba(X[self.features])
-        
+
         return bscore[0][1]
 
 

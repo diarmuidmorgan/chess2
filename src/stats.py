@@ -110,7 +110,7 @@ class analyze():
                     color = int(cell/abs(cell))
                     direction = color
 
-                    for coords in [[x+direction, -1],[x+direction,0],[x+direction,1]]:
+                    for coords in [[x+direction, y-1],[x+direction,y],[x+direction,y]]:
 
                         if validCoords(coords[0], coords[1]):
 
@@ -183,6 +183,8 @@ class analyze():
 
         if gs != None and move!=None:
             self.loadState(gs, move)
+        if move!=None:
+            self.move = move
 
         self.sumCentrePawns()
         self.findFianchetto()
@@ -198,7 +200,7 @@ class analyze():
         d={}
 
         d['pawnsGuardingKings']=self.pawnsGuardingKings
-        d['moves']=self.moves
+        d['possible_moves']=self.moves
         d['captures']=self.captures
         d['forks']=self.forks
         d['basicScore']=self.basicScore
@@ -214,13 +216,15 @@ class analyze():
         d['pawnLines']=self.pawnLines
         d['hasCastled']=self.hasCastled
         d['checked']=self.checked
+        d['protectingPieces']=self.protectingPieces
+        d['backRanks']=self.backRanks
         for x in range(8):
 
             for y in range(8):
 
                 d[str(x)+str(y)]=self.board[x][y]
 
-        d['move']=self.move
+        d['moves_taken_so_far']=self.move
 
         row=pd.DataFrame([d], columns=d.keys())
         return row
