@@ -3,8 +3,8 @@ from app import app
 import time
 from flask import request
 import json
-import gs
-import thinker2
+from chess import gs
+from chess import thinker2
 import copy
 import time
 thinker = thinker2.thinker()

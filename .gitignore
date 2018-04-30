@@ -17,7 +17,7 @@ src/data/forest.pikl
 src/data/games.csv
 src/data/exploded.csv
 src/data/explodedNoOpenings.csv
-
+src/data
 # Project files
 .ropeproject
 .project

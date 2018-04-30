@@ -224,7 +224,7 @@ class analyze():
 
                 d[str(x)+str(y)]=self.board[x][y]
 
-        d['moves_taken_so_far']=self.move
+        d['turns_taken_so_far']=self.move
 
         row=pd.DataFrame([d], columns=d.keys())
         return row

@@ -1,8 +1,8 @@
-import gs
-import stats
-import pieces
-import models
-import forest
+from chess import gs
+from chess import stats
+from chess import pieces
+from chess import models
+from chess import forest
 import copy
 from operator import itemgetter
 import random

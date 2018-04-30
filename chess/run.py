@@ -18,6 +18,6 @@ if __name__ == "__main__":
 	port = 5000
 	url = "http://localhost:{0}".format(port)
 
-	
+
 
 	app.run(host='0.0.0.0', port=port, debug=False)

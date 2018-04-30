@@ -1,7 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier as rf
 from sklearn.externals import joblib
 import pandas as pd
-import stats
+from chess import stats
 import json
 from sklearn.linear_model import LogisticRegression
 
@@ -46,7 +46,7 @@ class forest():
     def score(self,gstate, moveNum, color=None):
 
         X=self.an.analyze(moveNum, gstate, True)
-        
+
 
 
         bscore = self.model.predict_proba(X[self.features])

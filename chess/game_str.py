@@ -1,6 +1,6 @@
-import gs as gs
-from stats import analyze as an
-from stats import validCoords
+from chess import gs as gs
+from chess.stats import analyze as an
+from chess.stats import validCoords
 
 import numpy as np
 

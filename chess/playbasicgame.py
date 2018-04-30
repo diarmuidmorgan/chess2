@@ -1,10 +1,10 @@
-from gs import gamestate
+from chess.gs import gamestate
 import copy
-from models import forest
+from chess.models import forest
 forestmodel =forest(pikl='data/fullforest.pikl')
-from stats import analyze as an
-from stats import validCoords
-from models import forest
+from chess.stats import analyze as an
+from chess.stats import validCoords
+from chess.models import forest
 import numpy as np
 from simple_search import rootNode
 
