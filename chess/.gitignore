@@ -17,6 +17,7 @@ data/forest.pikl
 data/games.csv
 data/exploded.csv
 data/explodedNoOpenings.csv
+data/model.pikl
 
 # Project files
 .ropeproject

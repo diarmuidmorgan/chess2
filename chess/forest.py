@@ -17,8 +17,8 @@ class forest():
 
         else:
 
-            self.model=joblib.load('data/logReg.pikl')
-            self.features = json.load(open('data/logRegfeatures'))['features']
+            self.model=joblib.load('data/model.pikl')
+            self.features = json.load(open('data/features'))['features']
 
     def buildModel(self):
         from sklearn.linear_model import LogisticRegression
@@ -36,9 +36,9 @@ class forest():
         df = pd.concat(features_to_concat, axis=1)
         print(df[cols].shape)
         clf = rf().fit(df[cols], df['winner_white'])
-        joblib.dump(clf, 'data/logReg.pikl')
+        joblib.dump(clf, 'data/model.pikl')
         import json
-        f=open('data/RFfeatures','w')
+        f=open('data/features','w')
         f.write(json.dumps({'features':cols}))
         f.close()
         print(cols)

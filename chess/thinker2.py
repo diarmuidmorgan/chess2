@@ -31,7 +31,7 @@ class thinker():
             new_gs = copy.deepcopy(gs)
 
 
-            if gs.castles[color*1000][castle] == True and random.random()>0.3:
+            if gs.castles[color*1000][castle] == True and random.random()>0:
 
                 if castle=='king':
                     number=2
@@ -47,7 +47,7 @@ class thinker():
                     best_gs = copy.deepcopy(new_gs)
 
         for capture in gs.captures[color]:
-            if random.random()>0.01:
+            if random.random()>0:
                 new_gs = copy.deepcopy(new_gs)
                 origin = capture['origin']
                 destination = capture['destination']
@@ -63,7 +63,7 @@ class thinker():
 
 
         for move in gs.moves[color]:
-            if random.random()>0.1:
+            if random.random()>0:
                 new_gs = copy.deepcopy(gs)
                 origin = move['origin']
                 destination = move['destination']
@@ -112,7 +112,7 @@ class thinker():
             new_gs = copy.deepcopy(gs)
 
 
-            if new_gs.castles[color*1000][castle] == True and random.random()>0.2:
+            if new_gs.castles[color*1000][castle] == True and random.random()>0:
 
                 if castle=='king':
                     number=2
@@ -125,7 +125,7 @@ class thinker():
 
 
         for capture in gs.captures[color]:
-            if random.random()>0.2:
+            if random.random()>0:
                 new_gs = copy.deepcopy(new_gs)
                 origin = capture['origin']
                 destination = capture['destination']
@@ -140,7 +140,7 @@ class thinker():
 
 
         for move in gs.moves[color]:
-            if random.random()>0.7:
+            if random.random()>0:
                 new_gs = copy.deepcopy(gs)
                 origin = move['origin']
                 destination = move['destination']
