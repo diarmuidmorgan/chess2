@@ -43,7 +43,7 @@ class forest():
         f.close()
         print(cols)
 
-    def score(self,gstate, moveNum, color):
+    def score(self,gstate, moveNum, color=None):
 
         X=self.an.analyze(moveNum, gstate, True)
         #see if this is the fucking issue!
