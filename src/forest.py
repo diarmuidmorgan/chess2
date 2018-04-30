@@ -46,7 +46,7 @@ class forest():
     def score(self,gstate, moveNum, color=None):
 
         X=self.an.analyze(moveNum, gstate, True)
-        #see if this is the fucking issue!
+        
 
 
         bscore = self.model.predict_proba(X[self.features])

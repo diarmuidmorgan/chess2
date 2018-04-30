@@ -209,7 +209,7 @@ class analyze():
         d['centrePawns']=self.centrePawns
         d['kingMoves']=self.kingMoves
         d['pawnRanks']=self.pawnRanks
-        d['fianachettos']=self.fianchettos
+        d['fianchettos']=self.fianchettos
         d['stackedPawns']=self.stackedPawns
         d['enpassants']=self.enpassants
         d['canCastle']=self.canCastle
