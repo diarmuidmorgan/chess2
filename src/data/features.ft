@@ -1,4 +1,0 @@
-basicScore', 'black_rating', 'canCastle', 'captures', 'centrePawns',
-       'checked', 'enpassants', 'fianachettos', 'forks', 'hasCastled',
-       'kingMoves', 'moves', 'pawnLines', 'pawnRanks', 'pawnsGuardingKings',
-       'pins', 'protects', 'stackedPawns'],

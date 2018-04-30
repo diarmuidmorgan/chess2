@@ -1,0 +1,1 @@
+{"features": ["basicScore", "canCastle", "captures", "centrePawns", "checked", "enpassants", "fianachettos", "forks", "hasCastled", "kingMoves", "move", "moves", "pawnLines", "pawnRanks", "pawnsGuardingKings", "pins", "protects", "stackedPawns"]}
